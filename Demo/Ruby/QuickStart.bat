@@ -1,2 +1,0 @@
-ruby QuickStart.rb
-pause

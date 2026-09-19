@@ -1,0 +1,14 @@
+# Generated runtime logs
+renderer.log
+*.log
+
+# Local registry exports and backups
+*.reg
+*.reg.bak-*
+
+# Visual Studio build output
+.vs/
+bin/
+obj/
+*.user
+*.suo

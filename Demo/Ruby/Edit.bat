@@ -1,2 +1,0 @@
-ruby Edit.rb
-pause

@@ -1,2 +1,0 @@
-ruby Template.rb
-pause

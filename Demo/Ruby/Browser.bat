@@ -1,2 +1,0 @@
-ruby Browser.rb
-pause
