@@ -1,46 +1,103 @@
-# WsoXnaBridge
+<div align="center">
 
-WsoXnaBridge lets Windows Script Host games written in JScript or VBScript use XNA Framework 4.0 for hardware-accelerated sprites, text, sound, keyboard, and mouse input. WSO (`Scripting.WindowSystemObject`) creates the window while `WsoXnaBridge.Renderer` supplies rendering and the game loop.
+# 🎮 WsoXnaBridge
 
-## One-click installation
+### Build hardware-accelerated Windows games with JScript or VBScript
 
-1. Download the repository or extract its ZIP archive.
-2. Double-click `install.bat` and approve the Windows administrator prompt.
-3. The installer locates WSO through the registry. If WSO is missing, it installs the bundled `wso.dll`.
-4. If XNA Framework 4.0 is missing, it silently installs `XNA Framework 4.0 Redist.msi`.
-5. It copies `WsoXnaBridge.dll` next to WSO, registers the 32-bit COM component, and runs an automatic smoke test.
+WsoXnaBridge connects **WindowSystemObject**, **Microsoft XNA Framework 4.0**, and the classic **Windows Script Host** in one small x86 COM component.
 
-Run `uninstall.bat` as administrator to remove the bridge. It leaves XNA Framework and any pre-existing WSO installation in place.
+[![Windows](https://img.shields.io/badge/Windows-32%20%26%2064--bit-0078D4?style=for-the-badge&logo=windows)](https://github.com/programci42/WsoXnaBridge)
+[![Languages](https://img.shields.io/badge/Scripts-JScript%20%7C%20VBScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://github.com/programci42/WsoXnaBridge)
+[![XNA](https://img.shields.io/badge/Renderer-XNA%204.0-68217A?style=for-the-badge&logo=dotnet)](https://www.microsoft.com/download/details.aspx?id=20914)
+[![License](https://img.shields.io/github/license/programci42/WsoXnaBridge?style=for-the-badge)](LICENSE)
+[![Stars](https://img.shields.io/github/stars/programci42/WsoXnaBridge?style=for-the-badge)](https://github.com/programci42/WsoXnaBridge/stargazers)
 
-## Example game
+[Quick Start](#-quick-start) · [Example Game](#-example-game) · [Script API](#-script-api) · [Steam Developer Page](https://store.steampowered.com/curator/35460052)
 
-`Example_Game` contains a small driving game made with road, car, and zombie artwork from LoopCut. It includes a scrolling road, animated zombies, FPS display, collision scoring, and dismemberment effects.
+</div>
 
-- Double-click `Example_Game\play.vbs` to start the JScript version without opening a black console window. If the bridge is missing, the launcher starts `install.bat`, waits for setup, and then starts the game.
-- Run `Example_Game\play.vbs example_game.vbs` for the VBScript version.
-- `play.cmd` remains available as a console launcher for troubleshooting.
-- Arrow keys drive the car.
-- Hitting a zombie awards 100 points.
+---
 
-Both implementations use the same API and assets, making them useful starting points for new games.
+## ✨ What it does
 
-## Running your own game
+WSO gives scripts a native Windows window and control system. WsoXnaBridge adds the game layer: GPU-backed sprites, runtime text, sound, keyboard and mouse input, and a frame callback.
 
-Copy `play.vbs` next to a `.js` or `.vbs` game and double-click it. The launcher stays hidden, detects 32-bit or 64-bit Windows, and selects the correct 32-bit Windows Script Host. You may also pass a script explicitly:
+| Capability | Available |
+|---|:---:|
+| Hardware-accelerated 2D sprites | ✅ |
+| Sprite sheets and source rectangles | ✅ |
+| Runtime text with installed Windows fonts | ✅ |
+| WAV sound effects and looping audio | ✅ |
+| Keyboard and mouse input | ✅ |
+| Per-frame JScript/VBScript callback | ✅ |
+| One-click dependency installation | ✅ |
+| Silent architecture-aware launcher | ✅ |
+
+```mermaid
+flowchart LR
+    A[JScript / VBScript game] --> B[WindowSystemObject]
+    A --> C[WsoXnaBridge COM]
+    B --> D[Native Windows window]
+    C --> E[XNA Framework 4.0]
+    E --> F[Sprites, text, sound and input]
+```
+
+## 🚀 Quick start
+
+1. Download this repository or choose **Code → Download ZIP**.
+2. Extract the archive.
+3. Double-click **`install.bat`** and approve the Windows administrator prompt.
+4. Open **`Example_Game`** and double-click **`play.vbs`**.
+
+The installer automatically:
+
+- detects an existing 32-bit WSO installation;
+- installs the bundled `wso.dll` when WSO is missing;
+- silently installs XNA Framework 4.0 when required;
+- copies and registers `WsoXnaBridge.dll`;
+- runs a COM activation smoke test.
+
+Use `uninstall.bat` as administrator to remove the bridge. XNA Framework and a pre-existing WSO installation are left in place.
+
+## 🧟 Example game
+
+The included highway game demonstrates the complete script workflow in both languages.
+
+- scrolling LoopCut road and car artwork;
+- animated zombies with four-frame walk cycles;
+- collision scoring and two-piece dismemberment effects;
+- looping engine audio and zombie-crush sound;
+- live FPS counter;
+- arrow-key driving;
+- matching `example_game.js` and `example_game.vbs` implementations.
+
+| Launch command | Result |
+|---|---|
+| Double-click `Example_Game\play.vbs` | Starts the JScript game without a console window |
+| `Example_Game\play.vbs example_game.vbs` | Starts the VBScript game |
+| `Example_Game\play.cmd` | Console launcher for troubleshooting |
+
+If the bridge has not been installed, `play.vbs` starts the installer, waits for it to finish, and then launches the game.
+
+## 🕹️ Start your own game
+
+Copy `play.vbs` next to your game script and assets. It detects 32-bit or 64-bit Windows and always selects the correct x86 Windows Script Host.
 
 ```bat
 play.vbs mygame.js
 play.vbs mygame.vbs
 ```
 
-WsoXnaBridge is an x86 COM component. On 64-bit Windows, starting a game directly with the 64-bit `wscript.exe` will fail. The supplied launcher prevents that mistake. Use `play.cmd` only when you want to see console output while troubleshooting. Game scripts and assets may live in any folder; use absolute paths or resolve relative paths from `WScript.ScriptFullName`.
+WsoXnaBridge is an x86 COM component. A 64-bit `wscript.exe` cannot load it directly; the supplied launcher handles this automatically.
 
-## Minimal JScript example
+### Minimal JScript game
 
 ```js
 var wso = new ActiveXObject("Scripting.WindowSystemObject");
 var form = wso.CreateForm(100, 100, 820, 660);
-var host = form.CreateActiveXControl(0, 0, 800, 600, "WsoXnaBridge.Renderer");
+var host = form.CreateActiveXControl(
+    0, 0, 800, 600, "WsoXnaBridge.Renderer"
+);
 var game = host.Control;
 
 var texture = game.LoadTexture("C:\\mygame\\player.png");
@@ -49,6 +106,7 @@ player.X = 400;
 player.Y = 300;
 
 function Update(dt) {
+    if (game.IsKeyDown("Left"))  player.X -= 200 * dt;
     if (game.IsKeyDown("Right")) player.X += 200 * dt;
 }
 
@@ -57,47 +115,101 @@ form.Show();
 wso.Run();
 ```
 
-VBScript assigns the callback with `Game.OnUpdate = GetRef("Update")`.
+VBScript assigns the frame callback with:
 
-## Script API
+```vb
+Game.OnUpdate = GetRef("Update")
+```
+
+## 🧰 Script API
 
 ### Renderer
 
-- `LoadTexture(path)` and `CreateSprite(texture)`
-- `CreateText(text, fontFamily, fontSize)`
-- `LoadSound(path)`
-- `IsKeyDown(name)` and `IsMouseDown(button)`
-- `MouseX`, `MouseY`, `ElapsedSeconds`, and `TotalSeconds`
-- `BackgroundColor`, `Width`, `Height`, and `OnUpdate`
+| Member | Purpose |
+|---|---|
+| `LoadTexture(path)` | Load a PNG/JPG texture at runtime |
+| `CreateSprite(texture)` | Create a drawable sprite |
+| `CreateText(text, font, size)` | Rasterize text into a sprite |
+| `LoadSound(path)` | Load a WAV sound effect |
+| `IsKeyDown(name)` | Read keyboard state |
+| `IsMouseDown(button)` | Read mouse button state |
+| `MouseX`, `MouseY` | Read cursor position |
+| `ElapsedSeconds`, `TotalSeconds` | Read frame and total time |
+| `BackgroundColor`, `Width`, `Height` | Configure or inspect the renderer |
+| `OnUpdate` | Assign the per-frame callback |
 
 ### Sprite
 
-- `X`, `Y`, `Rotation`, `ScaleX`, `ScaleY`, `OriginX`, `OriginY`, and `Layer`
-- `Visible`, `Color`, `Alpha`, and `Texture`
-- `Scale(value)`, `CenterOrigin()`, and `Destroy()`
-- `SetSourceRect(x, y, width, height)` and `ClearSourceRect()`
-- `SetText(text)` for text sprites
+- Transform: `X`, `Y`, `Rotation`, `ScaleX`, `ScaleY`, `OriginX`, `OriginY`
+- Rendering: `Layer`, `Visible`, `Color`, `Alpha`, `Texture`
+- Helpers: `Scale(value)`, `CenterOrigin()`, `Destroy()`
+- Sprite sheets: `SetSourceRect(x, y, width, height)`, `ClearSourceRect()`
+- Text sprites: `SetText(text)`
 
 ### Sound
 
-- `Play()`, `Play(volume)`, `PlayLooped()`, and `StopLoop()`
+- `Play()`
+- `Play(volume)`
+- `PlayLooped()`
+- `StopLoop()`
 - `DurationSeconds`
 
-## Troubleshooting
+## 📁 Repository map
 
-- **ActiveX object can't create object:** run `install.bat`, then launch the game through `play.vbs`.
-- **BadImageFormat or wrong format:** a 64-bit script host was used. Start the game through `play.vbs`.
-- **XNA fails to load:** make sure `XNA Framework 4.0 Redist.msi` is present and run the installer again.
-- Runtime details are written to `renderer.log` next to the installed `WsoXnaBridge.dll`.
+```text
+WsoXnaBridge/
+├─ Example_Game/             JScript and VBScript sample game
+│  ├─ Assets/                Road, car, zombie and audio assets
+│  ├─ example_game.js
+│  ├─ example_game.vbs
+│  └─ play.vbs
+├─ Renderer.cs               XNA renderer and frame loop
+├─ Sprite.cs                 Script-facing sprite object
+├─ GameTexture.cs            Texture wrapper
+├─ GameSound.cs              Sound wrapper
+├─ TextRenderer.cs           GDI+ runtime text rasterizer
+├─ WsoXnaBridge.dll          Ready-to-use x86 bridge
+├─ install.bat               One-click setup
+├─ uninstall.bat             Bridge removal
+├─ play.vbs                  Silent game launcher
+└─ test_*                    COM and rendering smoke tests
+```
 
-## Repository contents
+## 🛠️ Troubleshooting
 
-- `WsoXnaBridge.dll`: ready-to-use x86 COM bridge
-- `wso.dll`: WSO runtime
-- `XNA Framework 4.0 Redist.msi`: XNA runtime installer
-- `install.bat`, `uninstall.bat`, `play.vbs`, `play.cmd`, and `RunScript32.cmd`: setup and launch tools
-- `Example_Game`: JScript and VBScript sample game
-- `*.cs`: C# bridge source files
-- `test_*`: basic and advanced test scripts
+| Symptom | Fix |
+|---|---|
+| `ActiveX object can't create object` | Run `install.bat`, approve UAC, then use `play.vbs` |
+| `BadImageFormat` or wrong format | The 64-bit host was used; launch through `play.vbs` |
+| XNA fails to load | Keep `XNA Framework 4.0 Redist.msi` beside `install.bat` and reinstall |
+| Need detailed startup information | Read `renderer.log` beside the installed bridge DLL |
+| Need visible launcher output | Use `play.cmd` instead of `play.vbs` |
 
-Third-party runtime and audio attribution is recorded in `THIRD_PARTY_NOTICES.md`. Add the license you want to use for your own source code before publishing if you want others to be able to modify and redistribute it under explicit terms.
+## 👨‍💻 Developer
+
+<div align="center">
+
+### programci42
+
+Independent Windows software and game developer.
+
+[![GitHub](https://img.shields.io/badge/GitHub-programci42-181717?style=for-the-badge&logo=github)](https://github.com/programci42)
+[![Steam](https://img.shields.io/badge/Steam-ismail%20ozel%20games-1B2838?style=for-the-badge&logo=steam)](https://store.steampowered.com/curator/35460052)
+
+**[Visit my Steam developer page →](https://store.steampowered.com/curator/35460052)**
+
+</div>
+
+## 📜 License and credits
+
+WsoXnaBridge source code is available under the [MIT License](LICENSE).
+
+Third-party runtime and audio attribution is documented in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and [Example_Game/AUDIO_CREDITS.md](Example_Game/AUDIO_CREDITS.md).
+
+---
+
+<div align="center">
+
+If WsoXnaBridge helps your project, consider giving the repository a ⭐.
+
+</div>
